@@ -20,33 +20,33 @@ public class CameraController : MonoBehaviour
     {
         player = GameObject.Find("Player");
 
-        Cursor.lockState = CursorLockMode.Locked; //locks cursor in middle of screen
-        Cursor.visible = true; //for now
+        Cursor.lockState = CursorLockMode.Locked;   //locks cursor in middle of screen
+        Cursor.visible = true;                      //for now
 
     }
 
-    // Update is called once per frame
+    // Update is called once per frame //
     void Update()
     {
         mouse_h = Input.GetAxisRaw("Mouse X") * xSen;
         mouse_v = Input.GetAxisRaw("Mouse Y") * ySen;
 
-        xRotation -= mouse_v; //add new input to what it was last frame
-        yRotation += mouse_h; //inverted by default so subtract to make it like normal mouse controlls
+        xRotation -= mouse_v;                                           //add new input to what it was last frame
+        yRotation += mouse_h;                                           //inverted by default so subtract to make it like normal mouse controlls
 
-        xRotation = Mathf.Clamp(xRotation, -90.0f, 90.0f); //keep vertical looking limited to 90 degrees up and down
+        xRotation = Mathf.Clamp(xRotation, -90.0f, 90.0f);              //keep vertical looking limited to 90 degrees up and down
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0); //set rotation to new location
 
-        player.transform.rotation = Quaternion.Euler(0, yRotation, 0); //rotate player in y directions with camera so directional movements still work
+        player.transform.rotation = Quaternion.Euler(0, yRotation, 0);  //rotate player in y directions with camera so directional movements still work
 
     }
 
 
 
     private void LateUpdate()
-    {
-        //Have camera follow player
+    { 
+        // Have camera follow player //
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.6f, player.transform.position.z);
     }
 }
