@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     public float ySen = 100;
     private float xRotation;
     private float yRotation;
+    private GameManager gameManager;
 
 
 
@@ -22,7 +23,7 @@ public class CameraController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;   //locks cursor in middle of screen
         Cursor.visible = true;                      //for now
-
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Update is called once per frame //
@@ -38,15 +39,21 @@ public class CameraController : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0); //set rotation to new location
 
-        player.transform.rotation = Quaternion.Euler(0, yRotation, 0);  //rotate player in y directions with camera so directional movements still work
+        if (!gameManager.gameOver)
+        {
+            player.transform.rotation = Quaternion.Euler(0, yRotation, 0);  //rotate player in y directions with camera so directional movements still work
+        }
 
     }
 
 
 
     private void LateUpdate()
-    { 
-        // Have camera follow player //
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.6f, player.transform.position.z);
+    {
+        if (!gameManager.gameOver)
+        {
+            // Have camera follow player //
+            transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.6f, player.transform.position.z);
+        }
     }
 }

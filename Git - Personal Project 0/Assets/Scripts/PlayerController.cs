@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,7 +12,11 @@ public class PlayerController : MonoBehaviour
     public bool onGround = true;
     private float jumpForce = 500;
     private float gravityModifyer = 1.5f;
+    public GameObject bulletPrefab;
+    public GameObject gun;
 
+    public int ammo = 15;
+    public int lives = 3;
 
 
 
@@ -20,7 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifyer;
-
+        Debug.Log($"Lives: {lives}. Ammo: {ammo}.");
     }
 
     // Update is called once per frame
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     void playerMove()
     {
+        shoot();
         sprint();
         jump();
         //directional MOVEMENT
@@ -65,6 +71,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void shoot() 
+    {
+        if (Input.GetMouseButtonDown(0) && ammo > 0)
+        {
+            Instantiate(bulletPrefab, gun.transform.position, gun.transform.rotation);
+            ammo--;
+            Debug.Log($"Ammo: {ammo}");
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -73,4 +89,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ammo"))
+        {
+            ammo += 10;
+            Destroy(other.gameObject);
+            Debug.Log($"AMMO: {ammo}");
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            lives--;
+            Destroy(other.gameObject);
+            Debug.Log($"Lives: {lives}");
+        }
+    }
 }
